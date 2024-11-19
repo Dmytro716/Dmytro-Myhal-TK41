@@ -2,105 +2,82 @@ class MySuperClass:
     """Тестовий клас, описує студента."""
 
     # Класові змінні
-    var_lover_case = "Це проста класова змінна"
-    var_upper_case = "ЦЕ КЛАСОВА ЗМІННА З ВЕЛИКИМИ ЛІТЕРАМИ"  # Нова класова змінна
-    COLLEGE_NAME = "Це подібне до константи в класі, але можна змінити"
-    _protected_var = 1  # Захищена змінна
-    __private_var = 2  # Приватна змінна
-
-    # Класові змінні для підрахунку студентів
+    COLLEGE_NAME = "Національний університет"
     total_students = 0
     total_marks = 0
 
-    # Моя нова класова змінна
-    student_id = "Студент ID №1"
-
     def __init__(self, surname: str, name: str, mark: int = 0, group: str = None):
         """Ініціалізуємо об'єкт студента."""
-        print("Викликаємо __init__")
-        self.__surname = surname  # Приватний атрибут
-        self.__name = name  # Приватний атрибут
-        
-        # Якщо mark == None, використовуємо значення 0
-        self.mark = mark if mark is not None else 0  # Перевірка на None, якщо mark == None, присвоюється 0
-        
-        self.group = group  # Публічний атрибут
-        self._age = None  # Захищений атрибут
-        self._scholarship = 0  # Студентська стипендія
+        self.__surname = surname  # Приватний атрибут для прізвища
+        self.__name = name  # Приватний атрибут для імені
+        self.mark = mark  # Публічний атрибут для оцінки
+        self.group = group  # Публічний атрибут для групи
+        self._age = None  # Захищений атрибут для віку (поки не використовується)
+        self._scholarship = None  # Спочатку стипендія не встановлена
 
-        # Перезаписуємо класову змінну через екземпляр
-        self.var_lover_case = "Перазаписали класову змінну"
-        self.var_upper_case = "Нова велика літера для var_upper_case"  # Перезапис класової змінної через екземпляр
-        self.student_id = "Новий ідентифікатор студента"  # Перезапис моєї класової змінної
-
-        # Оновлюємо статистику, тільки якщо mark не None
+        # Оновлюємо статистику
         MySuperClass.total_students += 1
-        MySuperClass.total_marks += self.mark  # Тут буде додаватися значення mark, яке гарантовано не None
+        MySuperClass.total_marks += self.mark
 
     def __del__(self):
         """Викликається при видаленні об'єкта. Зменшує кількість студентів."""
-        print("Відрахували студента")
         MySuperClass.total_students -= 1
-        if self.mark is not None:  # Перевірка, щоб уникнути помилки при відніманні None
-            MySuperClass.total_marks -= self.mark  # Віднімаємо оцінку студента тільки, якщо вона є
+        MySuperClass.total_marks -= self.mark
 
     @property
-    def college_raiting(self):
-        """Рейтинг коледжу, розрахований на основі середнього балу студентів."""
-        return MySuperClass.total_marks / MySuperClass.total_students if MySuperClass.total_students > 0 else 0
+    def scholarship(self):
+        """Властивість для отримання стипендії."""
+        return self._scholarship or "Стипендія не призначена"
 
-    @property
-    def name(self):
-        """Властивість для доступу до ім'я студента (тільки для читання)."""
-        return self.__name
-    
-    @property
-    def surname(self):
-        """Властивість для доступу до прізвища студента (тільки для читання)."""
-        return self.__surname
+    def update_scholarship(self, rating: int, special_case: bool = False):
+        """
+        Оновлює стипендію студента на основі оцінки та додаткових умов.
+        
+        Параметри:
+            rating (int): Рейтинг студента (1-5).
+            special_case (bool): Якщо студент має особливий статус (наприклад, сирота, учасник змагань).
+        """
+        if special_case:
+            self._scholarship = "2000 грн (Особливий статус)"
+            return "Призначено підвищену стипендію через особливий статус"
 
-    @property
-    def say_hello(self):
-        """Тільки для демонстрації, повертає привітання."""
-        return f"Привіт {1 + 2}"
-
-    def __repr__(self):
-        """Представлення об'єкта у вигляді рядка."""
-        return f"MySuperClass(surname={self.surname}, name={self.name}, mark={self.mark})"
-    
-    def __len__(self):
-        """Повертає довжину прізвища студента."""
-        return len(self.surname)
-    
-    def function_in_class(self):
-        """Публічний метод для демонстрації."""
-        return "Ми викликали публічний метод"
-
-    def _protected_method_in_class(self):
-        """Захищений метод, який демонструє доступ до приватних методів."""
-        self.__this_is_private()
-        return "Доступ до захищеного методу"
-
-    def __this_is_private(self):
-        """Приватний метод, не доступний поза класом."""
-        print("Це приватний метод!")
-
-    def calculate_scholarship_after_session(self, rating: int):
-        """Розраховує стипендію студента на основі оцінки після сесії."""
         if rating == 5:
             self._scholarship = "1800 грн"
             return "Присвоєно підвищену стипендію"
         elif rating == 4:
             self._scholarship = "1400 грн"
             return "Присвоєно звичайну стипендію"
-        self._scholarship = 0
-        return "Рейтинг занизький для стипендії"
-    
-    def panishment(self):
-        """Приклад методу з гумористичним описом наслідків поганих оцінок."""
-        return "Ми прийшли додому і мама нас насварила за погані оцінки"
+        else:
+            self._scholarship = None
+            return "Рейтинг занизький для стипендії"
 
-# Функція в модулі для демонстрації
-def function_in_module():
-    """Це просто функція, яка може бути реалізована з іншою логікою."""
-    pass
+    def show_student_info(self):
+        """Показує інформацію про студента."""
+        return (
+            f"Студент: {self.__name} {self.__surname}\n"
+            f"Оцінка: {self.mark}\n"
+            f"Група: {self.group or 'Не вказана'}\n"
+            f"Стипендія: {self.scholarship}"
+        )
+
+    @property
+    def name(self):
+        """Ім'я студента."""
+        return self.__name
+
+    @property
+    def surname(self):
+        """Прізвище студента."""
+        return self.__surname
+
+    # Альтернативний конструктор для створення об'єкта за ім'ям та прізвищем
+    @classmethod
+    def create_from_name_surname(cls, full_name):
+        name, surname = full_name.split(" ")
+        return cls(surname, name, 0)
+
+    # Альтернативний конструктор для створення об'єкта за прізвищем та ім'ям
+    @classmethod
+    def create_from_surname_name(cls, surname_name):
+        surname, name = surname_name.split(" ")
+        return cls(surname, name, 0)
