@@ -5,8 +5,9 @@ class MySuperClass:
     COLLEGE_NAME = "Національний університет"
     total_students = 0
     total_marks = 0
+    student_id = "Невизначений"  # Додано атрибут класу student_id
 
-    def __init__(self, surname: str, name: str, mark: int = 0, group: str = None):
+    def __init__(self, surname: str, name: str, mark: int = 0, group: str = None, hobby: str = None):
         """Ініціалізуємо об'єкт студента."""
         self.__surname = surname  # Приватний атрибут для прізвища
         self.__name = name  # Приватний атрибут для імені
@@ -14,6 +15,7 @@ class MySuperClass:
         self.group = group  # Публічний атрибут для групи
         self._age = None  # Захищений атрибут для віку (поки не використовується)
         self._scholarship = None  # Спочатку стипендія не встановлена
+        self.hobby = hobby  # Хобі студента (може бути None)
 
         # Оновлюємо статистику
         MySuperClass.total_students += 1
@@ -30,13 +32,7 @@ class MySuperClass:
         return self._scholarship or "Стипендія не призначена"
 
     def update_scholarship(self, rating: int, special_case: bool = False):
-        """
-        Оновлює стипендію студента на основі оцінки та додаткових умов.
-        
-        Параметри:
-            rating (int): Рейтинг студента (1-5).
-            special_case (bool): Якщо студент має особливий статус (наприклад, сирота, учасник змагань).
-        """
+        """Оновлює стипендію студента на основі оцінки та додаткових умов."""
         if special_case:
             self._scholarship = "2000 грн (Особливий статус)"
             return "Призначено підвищену стипендію через особливий статус"
@@ -57,7 +53,8 @@ class MySuperClass:
             f"Студент: {self.__name} {self.__surname}\n"
             f"Оцінка: {self.mark}\n"
             f"Група: {self.group or 'Не вказана'}\n"
-            f"Стипендія: {self.scholarship}"
+            f"Стипендія: {self.scholarship}\n"
+            f"Хобі: {self.hobby if self.hobby else 'Немає хобі'}"
         )
 
     @property
@@ -81,3 +78,17 @@ class MySuperClass:
     def create_from_surname_name(cls, surname_name):
         surname, name = surname_name.split(" ")
         return cls(surname, name, 0)
+
+    # Метод для демонстрації виклику через об'єкт
+    def function_in_class(self):
+        """Метод для демонстрації виклику через об'єкт."""
+        print(f"{self.name} {self.surname} викликає метод через об'єкт.")
+
+    # Статичний метод для хобі
+    @staticmethod
+    def hobbi(hobby=None):
+        """Метод для виведення хобі студента."""
+        if hobby:
+            print(f"Моє хобі: {hobby}")
+        else:
+            print("Студент не вказав хобі.")
